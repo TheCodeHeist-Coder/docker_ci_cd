@@ -1,0 +1,28 @@
+name: Deploy NodeJS Application to Aws
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        
+        
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v4
+
+            - name: Deploy Via SSH
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ubuntu
+                key: ${{ secrets.SSH_KEY }}
+                script: |
+                    /home/ubuntu/docker_ci_cd
+                    git pull
+                    docker compose up -d --build
+
+              
